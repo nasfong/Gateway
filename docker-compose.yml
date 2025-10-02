@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: backend_school
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=mongodb://nasfong:GZjWruInjQ@mongodb:27017
+    networks:
+      - mongo_net
+    depends_on:
+      - mongodb  # This ensures that the app waits for MongoDB
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017"  # MongoDB default port
+    volumes:
+      - mongo_data:/data/db  # Persist data
+    networks:
+      - mongo_net
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nasfong
+      MONGO_INITDB_ROOT_PASSWORD: GZjWruInjQ
+
+volumes:
+  mongo_data:
+
+networks:
+  mongo_net:
+    external: true  # Reuse the same external network
